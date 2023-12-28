@@ -1,3 +1,3 @@
 # Windows Privilege Escalation Exploits
 
-![Service Escalation Registry](service_escalation_registry/README.md)
+[Service Escalation Registry](https://github.com/KaminoSec/windows_privesc/tree/main/service_escalation_registry)
