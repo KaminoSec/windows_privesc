@@ -1,6 +1,6 @@
 # Exploit Autorun Startup Programs
 
-Running Autoruns.exe from [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite) we can view which programs that run from the autorun registry keys or folders. This tool also provides insight into Scheduled Tasks, Services, WinLogon, DLLS, and more.
+Running Autoruns64.exe from [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite) we can view which programs that run from the autorun registry keys or folders. This tool also provides insight into Scheduled Tasks, Services, WinLogon, DLLS, and more.
 
 Manual detection would require looking for entries in the following two registry keys:
 

