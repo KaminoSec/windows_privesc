@@ -10,8 +10,6 @@
 
 ## `JuicyPotato`
 
----
-
 ### **Connecting with MSSQLClient.py**
 
 - Using the credentials `sql_dev:Str0ng_P@ssw0rd!`, let's first connect to the SQL server instance and confirm our privileges. We can do this using [mssqlclient.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/mssqlclient.py) from the `Impacket` toolkit.
@@ -135,9 +133,7 @@ hostname
 WINLPE-SRV01
 ```
 
-# **`PrintSpoofer` and `RoguePotato`**
-
----
+## **`PrintSpoofer` and `RoguePotato`**
 
 - `JuicyPotato` doesn't work on Windows Server 2019 and Windows 10 build 1809 onwards.
 - However, [PrintSpoofer](https://github.com/itm4n/PrintSpoofer) and [RoguePotato](https://github.com/antonioCoco/RoguePotato) can be used to leverage the same privileges and gain `NT AUTHORITY\SYSTEM` level access.
