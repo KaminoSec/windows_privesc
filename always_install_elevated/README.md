@@ -4,8 +4,6 @@ AlwaysInstallElevated is a registry key entry in the **`HKLM\Software\Policies\M
 
 ## Detection
 
----
-
 Open command prompt and type: **`reg query HKLM\Software\Policies\Microsoft\Windows\Installer`**
 From the output, notice that “`AlwaysInstallElevated`” value is 1
 
